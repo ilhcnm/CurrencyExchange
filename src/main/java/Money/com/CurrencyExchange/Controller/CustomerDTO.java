@@ -1,4 +1,4 @@
-package Money.com.CurrencyExchange.Dao;
+package Money.com.CurrencyExchange.Controller;
 
 
 import lombok.AllArgsConstructor;
@@ -11,8 +11,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CustomerDTO{
+    private String Code;
     private String FullName;
-    private int Code;
     private char Sign;
 
 }
