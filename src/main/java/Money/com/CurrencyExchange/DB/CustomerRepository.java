@@ -1,12 +1,17 @@
 package Money.com.CurrencyExchange.DB;
 
 import Money.com.CurrencyExchange.Controller.CustomerValidateCurrency;
+import lombok.Getter;
 
 import java.sql.*;
 
 public class CustomerRepository {
-
+    @Getter
     private static final String DB_URl = "jdbc:sqlite:mydatabase.db";
+
+
+
+
     public void createTableIfNotExists(){
         // Down we Define sql - request for create table input variable: createTableSQl
         String createTableSQl = "CREATE TABLE IF NOT EXIST Currencies (" +
@@ -66,4 +71,5 @@ public class CustomerRepository {
         }
         return false;
     }
+
 }

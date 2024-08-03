@@ -15,5 +15,6 @@ public class CustomerDTO{
     private String FullName;
     private char Sign;
 
+
 }
 

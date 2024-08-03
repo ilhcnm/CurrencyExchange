@@ -23,16 +23,12 @@ public class CustomerValidateCurrency {
     public List<String> validate() {
         List<String> errors = new ArrayList<>();
 
-        String name = getFullName();
-        String nam = String.valueOf(name);
-        if (getFullName() == null || getFullName().isEmpty() || nam.length() < 5) {
+
+        if (getFullName() == null || getFullName().isEmpty() || getFullName().length() < 5) {
             errors.add("Error of Name!");
         }
 
-
-        String code = getCode();
-        String s = String.valueOf(code);
-        if (s.length() < 3) {
+        if (getCode().length() < 3) {
 
             errors.add("Error of code!");
         }
