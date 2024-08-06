@@ -30,16 +30,24 @@ public class CustomerServlet extends HttpServlet {
         response.setContentType("application/json");
         PrintWriter out = response.getWriter();
 
+        //Get html format return json format
+        //Get html format return json format
+        //Get html format return json format
+        //Get html format return json format
+
+
         CustomerDTO customerDTO = objectMapper.readValue(request.getInputStream(), CustomerDTO.class);
         CustomerValidateCurrency customerValidateCurrency = CustomerMapper.fromDTO(customerDTO);
 
            List<String> errors = customerValidateCurrency.validate();
 
            try{
-              if(repository.currencyExists(customerValidateCurrency.getCode())) {
+              if(!repository.currencyExists(customerValidateCurrency.getCode())) {
                   errors.add("Currency with the same code or name already exists");
+                  return;
               }
           }catch (SQLException e){
+               out.write("Database cannot answer !");
               response.setStatus(HttpServletResponse.SC_CONFLICT);
           }
             if(errors.isEmpty()){
@@ -61,6 +69,9 @@ public class CustomerServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
+
+        //A bit more clean code!
+
         String DB_URl = CustomerRepository.getDB_URl();
         String selectSQL = "SELECT * FROM Currencies";
         try(Connection connection = DriverManager.getConnection(DB_URl);
@@ -85,16 +96,16 @@ public class CustomerServlet extends HttpServlet {
                 response.getWriter().write(jsonArray.toString());
             }catch (SQLException e){
               response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                System.out.println("Cannot select table! " + e.getMessage());
+                response.getWriter().write("Cannot select table! " + e.getMessage());
             }
-        }catch (SQLException e){
+        } catch (SQLException e){
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            System.out.println("Database is not available! " + e.getMessage());
-        }
+            response.getWriter().write("Database is not available! " + e.getMessage());
+            }
 
-        //ResultSet = saving information from request.
-        // executeQuery it is relation handle request good work for those which return result type:date
+
 
     }
+
 
 }

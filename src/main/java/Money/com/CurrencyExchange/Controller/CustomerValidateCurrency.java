@@ -26,18 +26,16 @@ public class CustomerValidateCurrency {
 
         if (getFullName() == null || getFullName().isEmpty() || getFullName().length() < 5) {
             errors.add("Error of Name!");
-        }
-
-        if (getCode().length() < 3) {
-
+        }else if((getCode().length() < 3)){
             errors.add("Error of code!");
+        }else{
+            char sign = getSign();
+            String er = "/u0000";
+            if (String.valueOf(sign).equals(er)) {
+                errors.add("Sign is null!");
+            }
         }
 
-        char sign = getSign();
-        String er = "/u0000";
-        if (String.valueOf(sign).equals(er)) {
-            errors.add("Sign is null!");
-        }
         return  errors;
     }
 }
