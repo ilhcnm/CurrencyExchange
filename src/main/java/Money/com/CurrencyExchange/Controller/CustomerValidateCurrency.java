@@ -33,6 +33,7 @@ public class CustomerValidateCurrency {
             String er = "/u0000";
             if (String.valueOf(sign).equals(er)) {
                 errors.add("Sign is null!");
+
             }
         }
 

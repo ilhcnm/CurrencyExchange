@@ -24,10 +24,6 @@ public class  CertainCurrency extends  HttpServlet {
         response.setStatus(HttpServletResponse.SC_OK);
         PrintWriter out = response.getWriter();
 
-
-        //GEt html format return Json format
-        //Change many things!
-        //Validation and add method to variable;
         String CurrencyCode = request.getPathInfo();
 
             if(CurrencyCode == null || CurrencyCode.equals("/")){
@@ -39,7 +35,7 @@ public class  CertainCurrency extends  HttpServlet {
                 String jsonResult = customerRepository.FindbyCode(currencyCode);
                 if(jsonResult == null){
                     out.write("This currency did not found");
-                    response.setStatus(HttpServletResponse.SC_NOT_FOUND); //404
+                    response.setStatus(HttpServletResponse.SC_NOT_FOUND);
                 }else{
                     response.getWriter().write(jsonResult);
                     response.setStatus(HttpServletResponse.SC_OK);
