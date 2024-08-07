@@ -18,7 +18,9 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @WebServlet("/currencies")
 public class CustomerServlet extends HttpServlet {
@@ -30,25 +32,19 @@ public class CustomerServlet extends HttpServlet {
         response.setContentType("application/json");
         PrintWriter out = response.getWriter();
 
-        //Get html format return json format
-        //Get html format return json format
-        //Get html format return json format
-        //Get html format return json format
-
-
-        CustomerDTO customerDTO = objectMapper.readValue(request.getInputStream(), CustomerDTO.class);
+        CustomerDTO customerDTO = new CustomerDTO(request.getParameter("Code") , request.getParameter("FullName") , request.getParameter("Sign").charAt(0));
         CustomerValidateCurrency customerValidateCurrency = CustomerMapper.fromDTO(customerDTO);
 
            List<String> errors = customerValidateCurrency.validate();
 
            try{
-              if(!repository.currencyExists(customerValidateCurrency.getCode())) {
-                  errors.add("Currency with the same code or name already exists");
+              if(repository.currencyExists(customerValidateCurrency.getCode())) {
+                  response.setStatus(HttpServletResponse.SC_CONFLICT);
                   return;
               }
           }catch (SQLException e){
                out.write("Database cannot answer !");
-              response.setStatus(HttpServletResponse.SC_CONFLICT);
+              response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
           }
             if(errors.isEmpty()){
                 try{
