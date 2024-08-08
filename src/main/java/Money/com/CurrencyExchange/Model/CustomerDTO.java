@@ -1,14 +1,20 @@
-package Money.com.CurrencyExchange.Dao;
+package Money.com.CurrencyExchange.Model;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@NoArgsConstructor
 @AllArgsConstructor
-@Setter
 @Getter
-public class ModelofCurrency {
+@Setter
+public class CustomerDTO{
     private String Code;
     private String FullName;
-    private String  Sign;
+    private char Sign;
+
+
 }
+

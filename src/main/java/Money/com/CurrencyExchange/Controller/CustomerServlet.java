@@ -1,10 +1,10 @@
 package Money.com.CurrencyExchange.Controller;
 
 import Money.com.CurrencyExchange.DB.CustomerRepository;
+import Money.com.CurrencyExchange.Model.CustomerDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import jakarta.annotation.security.DeclareRoles;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -17,10 +17,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @WebServlet("/currencies")
 public class CustomerServlet extends HttpServlet {
@@ -29,7 +26,12 @@ public class CustomerServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request , HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("application/json");
+            super.doPost(request, response);
+        //Add - JSON представление вставленной в базу записи, включая её ID
+        //Add  - JSON представление вставленной в базу записи, включая её ID
+        //Add  - JSON представление вставленной в базу записи, включая её ID
+
+        response.setContentType("application/json"); // drag to WHERE json output
         PrintWriter out = response.getWriter();
 
         CustomerDTO customerDTO = new CustomerDTO(request.getParameter("Code") , request.getParameter("FullName") , request.getParameter("Sign").charAt(0));
@@ -37,17 +39,9 @@ public class CustomerServlet extends HttpServlet {
 
            List<String> errors = customerValidateCurrency.validate();
 
-           try{
-              if(repository.currencyExists(customerValidateCurrency.getCode())) {
-                  response.setStatus(HttpServletResponse.SC_CONFLICT);
-                  return;
-              }
-          }catch (SQLException e){
-               out.write("Database cannot answer !");
-              response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-          }
             if(errors.isEmpty()){
                 try{
+                    repository.createTableIfNotExists();
                     repository.saveCustomer(customerValidateCurrency);
                     response.setStatus(HttpServletResponse.SC_CREATED);
                     out.write("{\"message\": \"Customer created successfully.\"}");
@@ -58,6 +52,15 @@ public class CustomerServlet extends HttpServlet {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST );
                 out.write("{\"errors\": \"" + String.join(", ", errors) + "\"}");
             }
+
+            try{
+                if(!repository.currencyExists(customerValidateCurrency.getCode())) {
+                response.setStatus(HttpServletResponse.SC_CONFLICT);
+            }
+            }catch (SQLException e){
+                    out.write("Database cannot answer !");
+                    response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            }
     }
 
 
@@ -65,7 +68,7 @@ public class CustomerServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
-
+            super.doGet(request, response);
         //A bit more clean code!
 
         String DB_URl = CustomerRepository.getDB_URl();
