@@ -106,6 +106,7 @@ public class CustomerRepository {
         }
     }
 
+
     public boolean currencyExists(String code) throws SQLException{
         String query = "SELECT COUNT(*) FROM Currencies WHERE code = ?";
 
@@ -149,12 +150,18 @@ public class CustomerRepository {
 
     public String FindById(int id1, int id2) {
         String query = "SELECT " +
-                "c1.Id AS BaseCurrencyId, c1.Code AS BaseCurrencyCode, c1.FullName AS BaseCurrencyFullName, c1.Sign AS BaseCurrencySign, " +
-                "c2.Id AS TargetCurrencyId, c2.Code AS TargetCurrencyCode, c2.FullName AS TargetCurrencyFullName, c2.Sign AS TargetCurrencySign, " +
+                "c1.Id AS BaseCurrencyId, " +
+                "c1.Code AS BaseCurrencyCode, " +
+                "c1.FullName AS BaseCurrencyFullName, " +
+                "c1.Sign AS BaseCurrencySign, " +
+                "c2.Id AS TargetCurrencyId, " +
+                "c2.Code AS TargetCurrencyCode, " +
+                "c2.FullName AS TargetCurrencyFullName, " +
+                "c2.Sign AS TargetCurrencySign, " +
                 "er.Rate " +
                 "FROM Currencies c1 " +
-                "JOIN ExchangeRates er ON c1.Id = er.BaseCurrencyId " +
-                "JOIN Currencies c2 ON c2.Id = er.TargetCurrencyId " +
+                "JOIN ExchangeRates er ON c1.Id = er.BaseCurrencyId " + // joins which have if c1.id = er.BaseCurrencyID if everything ok то строки обох таблиц совпадают в одну
+                "JOIN Currencies c2 ON c2.Id = er.TargetCurrencyId " + //обьединяем таблицу currencies c параметром алиаса er.TargetCurrencyId
                 "WHERE c1.Id = ? AND c2.Id = ?";
 
         ObjectMapper objectMapper = new ObjectMapper();

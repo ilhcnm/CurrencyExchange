@@ -2,7 +2,6 @@ package Money.com.CurrencyExchange.Controller;
 
 import Money.com.CurrencyExchange.DB.CustomerRepository;
 import Money.com.CurrencyExchange.Model.CustomerDTO;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import jakarta.servlet.ServletException;
@@ -22,16 +21,11 @@ import java.util.List;
 @WebServlet("/currencies")
 public class CustomerServlet extends HttpServlet {
     private final CustomerRepository repository = new CustomerRepository();
-    private final ObjectMapper objectMapper = new ObjectMapper();
     @Override
     protected void doPost(HttpServletRequest request , HttpServletResponse response)
             throws ServletException, IOException {
             super.doPost(request, response);
-        //Add - JSON представление вставленной в базу записи, включая её ID
-        //Add  - JSON представление вставленной в базу записи, включая её ID
-        //Add  - JSON представление вставленной в базу записи, включая её ID
 
-        response.setContentType("application/json"); // drag to WHERE json output
         PrintWriter out = response.getWriter();
 
         CustomerDTO customerDTO = new CustomerDTO(request.getParameter("Code") , request.getParameter("FullName") , request.getParameter("Sign").charAt(0));
@@ -56,7 +50,12 @@ public class CustomerServlet extends HttpServlet {
             try{
                 if(!repository.currencyExists(customerValidateCurrency.getCode())) {
                 response.setStatus(HttpServletResponse.SC_CONFLICT);
-            }
+                }else{
+                    String resultJson = repository.GetByCode(customerValidateCurrency.getCode());
+                    response.setContentType("application/json");
+                    response.getWriter().write(resultJson);
+                    response.setStatus(HttpServletResponse.SC_OK);
+                }
             }catch (SQLException e){
                     out.write("Database cannot answer !");
                     response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -69,6 +68,8 @@ public class CustomerServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
             super.doGet(request, response);
+        //A bit more clean code!
+        //A bit more clean code!
         //A bit more clean code!
 
         String DB_URl = CustomerRepository.getDB_URl();
