@@ -66,43 +66,15 @@ public class CustomerServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
-
-        //A bit more clean code!
-        //A bit more clean code!
-        //A bit more clean code!
-
-        String DB_URl = CustomerRepository.getDB_URl();
-        String selectSQL = "SELECT * FROM Currencies";
-        try(Connection connection = DriverManager.getConnection(DB_URl);
-            PreparedStatement preparedStatement = connection.prepareStatement(selectSQL)){
-
-            ResultSet rs = preparedStatement.executeQuery();
-            int columnCount = rs.getMetaData().getColumnCount();
-
-           JsonArray jsonArray = new JsonArray();
-            try{
-               while(rs.next()){
-                   JsonObject jsonObject = new JsonObject();
-                   for (int i = 1; i <= columnCount; i++) {
-                       String columnName = rs.getMetaData().getColumnName(i);
-                       String columnValue = rs.getString(i);
-                       jsonObject.addProperty(columnName , columnValue);
-                   }
-                   jsonArray.add(jsonObject);
-               }
-                response.setStatus(HttpServletResponse.SC_OK);
-                response.setContentType("application/json");
-                response.getWriter().write(jsonArray.toString());
-            }catch (SQLException e){
-              response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                response.getWriter().write("Cannot select table! " + e.getMessage());
-            }
-        } catch (SQLException e){
+        if(repository.GetAllCurrencies() == null){
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            response.getWriter().write("Database is not available! " + e.getMessage());
-            }
-
-
+            response.getWriter().write("Database is unavailable, for Currencies ! ");
+        }else{
+            response.setContentType("application/json");
+            response.setStatus(HttpServletResponse.SC_OK);
+           Object JsonResult = repository.GetAllCurrencies();
+           response.getWriter().write(JsonResult.toString());
+        }
 
     }
 

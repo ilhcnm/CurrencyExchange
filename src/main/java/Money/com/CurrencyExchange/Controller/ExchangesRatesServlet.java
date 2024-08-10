@@ -65,9 +65,21 @@ public class ExchangesRatesServlet extends HttpServlet {
             out.write("Ops! Something went wrong with database");
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        if(customerRepository.GetAllExchangesRates() == null){
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            resp.getWriter().write("Database is unavailable, for ExchangesRates ! ");
+        }else{
+            resp.setContentType("application/json");
+            resp.setStatus(HttpServletResponse.SC_OK);
+            Object ResultJson = customerRepository.GetAllExchangesRates();
+            resp.getWriter().write(ResultJson.toString());
+        }
 
 
     }
-
-
 }
