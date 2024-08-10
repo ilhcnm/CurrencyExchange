@@ -8,8 +8,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import lombok.Getter;
 
 import java.math.BigDecimal;
@@ -315,7 +313,7 @@ public class CustomerRepository {
         String error = null;
         try(Connection connection = DriverManager.getConnection(DB_URl);
         PreparedStatement preparedStatement = connection.prepareStatement(query)){
-            preparedStatement.setBigDecimal(1, BigDecimal.valueOf(rate));
+            preparedStatement.setDouble(1, rate);
             preparedStatement.setInt(2, id1);
             preparedStatement.setInt(3, id2);
             int rowsUpdated = preparedStatement.executeUpdate();
@@ -329,6 +327,48 @@ public class CustomerRepository {
             error = ("error with database!" + e.getMessage());
         }
         return error;
+    }
+
+
+    public String GetExchangeCurrency(double amount, int id1 , int id2){
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonResult = null;
+
+        String query = "Select" +
+                "c1.Id AS BaseCurrencyId, " +
+                "c1.Code AS BaseCurrencyCode, " +
+                "c1.FullName AS BaseCurrencyFullName, " +
+                "c1.Sign AS BaseCurrencySign, " +
+                "c2.Id AS TargetCurrencyId, " +
+                "c2.Code AS TargetCurrencyCode, " +
+                "c2.FullName AS TargetCurrencyFullName, " +
+                "c2.Sign AS TargetCurrencySign, " +
+                "er.Rate " +
+                "? AS amount, " +
+                "? * er.Rate AS convertedAmount " +
+                "From Currencies c1 " +
+                "JOIN ExchangeRates er ON c1.Id = er.BaseCurrencyId " +
+                "JOIN Currencies c2 ON c2.Id = er.TargetCurrencyId " +
+                "WHERE c1.Id = ? AND c2.Id = ?";
+        try(Connection connection = DriverManager.getConnection(DB_URl);
+            PreparedStatement preparedStatement = connection.prepareStatement(query)){
+            preparedStatement.setDouble(1, amount);
+            preparedStatement.setDouble(2, amount);
+            preparedStatement.setInt(3, id1);
+            preparedStatement.setInt(4, id2);
+            ResultSet rs = preparedStatement.executeQuery();
+
+            if(rs.next()){
+                jsonResult = objectMapper.writeValueAsString(rs);
+                return jsonResult;
+            }
+
+
+        }catch (SQLException  | JsonProcessingException e){
+            System.out.println(e.getMessage());
+        }
+
+        return jsonResult;
     }
 }
 
