@@ -24,7 +24,6 @@ public class CustomerServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request , HttpServletResponse response)
             throws ServletException, IOException {
-            super.doPost(request, response);
 
         PrintWriter out = response.getWriter();
 
@@ -48,7 +47,7 @@ public class CustomerServlet extends HttpServlet {
             }
 
             try{
-                if(!repository.currencyExists(customerValidateCurrency.getCode())) {
+                if(repository.currencyExists(customerValidateCurrency.getCode())) {
                 response.setStatus(HttpServletResponse.SC_CONFLICT);
                 }else{
                     String resultJson = repository.GetByCode(customerValidateCurrency.getCode());
@@ -67,7 +66,7 @@ public class CustomerServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
-            super.doGet(request, response);
+
         //A bit more clean code!
         //A bit more clean code!
         //A bit more clean code!

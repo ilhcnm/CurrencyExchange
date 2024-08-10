@@ -18,7 +18,6 @@ public class ExchangesRatesServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        super.doPost(request, response);
         PrintWriter out = response.getWriter();
 
         String requestBaseCode = request.getParameter("baseCurrencyCode");
@@ -38,6 +37,8 @@ public class ExchangesRatesServlet extends HttpServlet {
         }else{
             out.write("Statement is missing");
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            out.write("Good!");
+            response.setStatus(HttpServletResponse.SC_OK);
         }if(idforBaseCode == -1 && idforTargetCode == -1){
             out.write("Not found Currency in database !");
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
@@ -51,7 +52,7 @@ public class ExchangesRatesServlet extends HttpServlet {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
         try {
-            if(!customerRepository.ExchangesRatesExists(idforBaseCode , idforTargetCode )){
+            if(customerRepository.ExchangesRatesExists(idforBaseCode , idforTargetCode )){
                 out.write("This code's capable already exist");
                 response.setStatus(HttpServletResponse.SC_CONFLICT);
             }else {
@@ -67,4 +68,6 @@ public class ExchangesRatesServlet extends HttpServlet {
 
 
     }
+
+
 }

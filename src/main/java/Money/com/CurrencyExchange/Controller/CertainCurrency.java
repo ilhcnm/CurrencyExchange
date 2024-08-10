@@ -10,11 +10,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-@WebServlet("/currency/{code}")
+@WebServlet("/currency/*")
 public class  CertainCurrency extends  HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
-            super.doGet(request, response);
+
         CustomerRepository customerRepository = new CustomerRepository();
         PrintWriter out = response.getWriter();
 
