@@ -34,22 +34,17 @@ public class ExchangeCurrency extends HttpServlet {
         }else{
             resp.setStatus(HttpServletResponse.SC_OK);
         }
-        if(customerRepository.GetExchangeCurrency(amount, idBaseCurrency , idTargetCurrencyCode) == null){
+        String JsonResult = customerRepository.GetExchangeCurrency(amount, idBaseCurrency , idTargetCurrencyCode);
+        if(JsonResult == null){
             resp.getWriter().write("Not found Currency");
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }else{
-            try {
-                customerRepository.GetExchangeCurrency(amount, idBaseCurrency , idTargetCurrencyCode);
-            }catch (ArithmeticException e){
-                System.out.println("Not found Currency" + e.getMessage());
-            }
             resp.setContentType("application/json");
-            String JsonResult = customerRepository.GetExchangeCurrency(amount, idBaseCurrency, idBaseCurrency);
-            resp.getWriter().write(JsonResult);
+            String JsonResult1 = customerRepository.GetExchangeCurrency(amount, idBaseCurrency, idTargetCurrencyCode);
+            resp.getWriter().write(JsonResult1);
             resp.setStatus(HttpServletResponse.SC_OK);
 
         }
-        // в нашей базе данных уже готовые валютные пары вычесляем с этих курсов курс AB +
-        //
+
     }
 }

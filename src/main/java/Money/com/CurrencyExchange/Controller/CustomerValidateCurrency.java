@@ -15,6 +15,7 @@ import java.util.Set;
 @Setter
 public class CustomerValidateCurrency {
 
+    private Long Id;
     private String Code;
     private String FullName;
     private char Sign;
